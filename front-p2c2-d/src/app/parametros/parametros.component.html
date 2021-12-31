@@ -1,0 +1,84 @@
+<div *ngIf="(nombreArchivo != ''); else elseBlock" class="container reporte">
+  <br>
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <h1>Parametrizacion para el Analisis</h1>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-auto">
+        <!-- <label for="caso_analisis">Analisis a realizar</label> -->
+        <p>Analisis a realizar</p>
+      </div>
+      <div class="col">
+        <select class="form-select" aria-label="Default select example" name="lista_analisis" id="lista_analisis" (change)="cambioAnalisis($event)">
+          <option style="display:none">SELECCIONAR</option>
+          <option [value]="item" *ngFor="let item of listaNombres">{{item}}</option>
+        </select>
+      </div>
+    </div>
+    <br>
+    <div class="d-flex justify-content-center">
+      <p>Nombre del archivo actual : <strong>{{nombreArchivo}}</strong></p>
+    </div>
+  </div>
+  <div *ngIf="(casoActual != undefined && casoActual != null)">
+    <form>       
+        <!-- varias iteracion dependiendo de la cantidad de parametros -->
+      <div *ngFor="let param of listaParametros">
+        <div class="row">
+          <div class="col-sm-2 col-form-label">
+            <label for="param-{{param}}">{{param}}</label>
+          </div>
+          <div class="col">
+            <select class="form-select" aria-label="Default select example" name={{param}} id={{param}} [ngModel]>
+              <option [value]="item" *ngFor="let item of columnas">{{item}}</option>
+            </select>
+          </div>
+        </div>
+        <br>        
+      </div>
+
+      <!-- Parametros numericos -->
+      <div *ngFor="let param of listaParametros_num">
+        <div class="row">
+          <div class="col-sm-2 col-form-label">
+            <label for="param-{{param}}">{{param}}</label>
+          </div>
+          <div class="col">
+            <input class="form-control" type="number" name="{{param}}" id="{{param}}">
+          </div>
+        </div>
+        <br>        
+      </div>
+
+      <!-- Parametros de texto -->
+
+      <div *ngFor="let param of listaParametros_text">
+        <div class="row">
+          <div class="col-sm-2 col-form-label">
+            <label for="param-{{param}}">{{param}}</label>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" name="{{param}}" id="{{param}}">
+          </div>
+        </div>
+        <br>        
+      </div>
+
+        <!-- termina las iteraciones aqui -->      
+        <div class="button-file" style="padding: 2em 0; justify-content: center;
+        align-items: center; display: flex;"> 
+          <input type="submit" value="Realizar reporte" class= "btn btn-outline-danger boton-item" style="font-size:1.3em;">
+      </div>
+    </form>
+  </div>  
+</div>
+<ng-template #elseBlock>
+  <div class="container">
+    <br>
+    <div class="d-flex justify-content-center alert alert-danger" role="alert">
+      <h1>No hay un archivo cargado, ingrese un archivo en <a href="/" style="color:#900C3F;"><strong>Carga de archivo</strong></a> </h1>
+    </div>
+  </div>
+</ng-template>
