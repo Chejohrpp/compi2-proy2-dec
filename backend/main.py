@@ -1,6 +1,8 @@
 import os
 import sys
-from flask import Flask, jsonify,request
+from flask import Flask, jsonify,request,url_for
+from flask_cors import CORS, cross_origin
+from werkzeug.utils import redirect
 # from reportes.Prediccion import impirmir
 import reportes.funciones.Primarias as pr
 import fun_main as fm
@@ -15,10 +17,12 @@ os.environ.update({'PUERTO': '4000'})
 sys.path.append(os.path.join(ROOT_PATH,'reportes'))
 
 app = Flask(__name__)
+CORS(app)
 
 app.config["file_analizar"] = 'static/files_analizar'
 app.config["path_file"] = ''
 app.config["file_name"] = ''
+app.config["datos_reporte"] = {}
 
 @app.route("/api",methods=['GET'])
 def hello_world():
@@ -57,9 +61,24 @@ def enviar_parametros():
 def realizarAnalisis():
     if app.config["path_file"] != '':
         print(request.json)
-        print(request.json["nombre_celdas"])
-    an.redirigirAnalisis(request.json["caso"],request.json["nombre_celdas"])
+        # print(request.json['caso'])
+        # print(request.json["name"])
+        # print(request.json["parametros"])
+        datos_reporte = an.redirigirAnalisis(app.config["path_file"],request.json["caso"],request.json["name"],request.json["parametros"])
+        app.config["datos_reporte"] = datos_reporte
     return jsonify(configReturn(''))
+
+@app.route('/api/reporte',methods=['POST','GET'])
+def enviar_reporte():
+    #realizar los envios de imgs
+    if len(app.config["datos_reporte"]) != 0:
+        return configReturn(app.config["datos_reporte"])    
+    return configReturnStatus(204,'')
+
+@app.route('/api/static/imgs_temp/<name_img>',methods=['GET'])
+def redirigirImgs(name_img):
+    #'/static/imgs_temp/'+name_img
+    return redirect('/static/imgs_temp/'+name_img)
 
 def configReturn(body):
     retorno = {
@@ -70,6 +89,17 @@ def configReturn(body):
         'body': body        
     }
     return retorno
+
+def configReturnStatus(status,body):
+    retorno = {
+        'status':status,
+        'headers':{
+            'Access-Control-Allow-Origin': '*',
+        },
+        'body': body        
+    }
+    return retorno
+
 
 app.config['DEBUG'] = os.environ.get('ENV') == 'desarrollo'
 app.run(host='localhost',port=int(os.environ.get('PUERTO')))

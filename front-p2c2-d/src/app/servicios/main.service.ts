@@ -11,7 +11,7 @@ export class MainService {
 
   // private BASE_URL = 'http://localhost:4000';
   private BASE_URL = '/api';
-  
+  BASE_URL_PUBLIC = 'http://localhost:4000'
 
   constructor(private http: HttpClient) { 
     
@@ -31,4 +31,14 @@ export class MainService {
   getDataParameter(): Observable<any>{
     return this.http.get(`${this.BASE_URL}/parametros`)
   }
+
+  sendParameters(params:any): Observable<any>{
+    return this.http.post(`${this.BASE_URL}/parametros`,params)
+  }
+
+  getDataReporte(): Observable<any>{
+    return this.http.get(`${this.BASE_URL}/reporte`)
+  }
+
+  
 }

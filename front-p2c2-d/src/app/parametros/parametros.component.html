@@ -23,7 +23,7 @@
     </div>
   </div>
   <div *ngIf="(casoActual != undefined && casoActual != null)">
-    <form>       
+    <form #parametros="ngForm" (ngSubmit)="subirParametros(parametros)">       
         <!-- varias iteracion dependiendo de la cantidad de parametros -->
       <div *ngFor="let param of listaParametros">
         <div class="row">
@@ -46,7 +46,7 @@
             <label for="param-{{param}}">{{param}}</label>
           </div>
           <div class="col">
-            <input class="form-control" type="number" name="{{param}}" id="{{param}}">
+            <input class="form-control" type="number" name="{{param}}" id="{{param}}" [ngModel]>
           </div>
         </div>
         <br>        
@@ -60,7 +60,7 @@
             <label for="param-{{param}}">{{param}}</label>
           </div>
           <div class="col">
-            <input class="form-control" type="text" name="{{param}}" id="{{param}}">
+            <input class="form-control" type="text" name="{{param}}" id="{{param}}" [ngModel]>
           </div>
         </div>
         <br>        
@@ -72,6 +72,11 @@
           <input type="submit" value="Realizar reporte" class= "btn btn-outline-danger boton-item" style="font-size:1.3em;">
       </div>
     </form>
+    <div *ngIf="(isOkey == false)">
+      <div class="d-flex justify-content-center alert alert-danger" role="alert">
+        <p>No se rellenaron las celdas: <strong>{{celdas_faltantes}}</strong></p>
+      </div>
+    </div>
   </div>  
 </div>
 <ng-template #elseBlock>

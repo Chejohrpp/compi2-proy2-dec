@@ -19,13 +19,15 @@ export class ParametrosComponent implements OnInit {
   listaParametros_text:Array<any> = [];
   listaParametros_opc:Array<any> = [];
   casoActual:any;
+  isOkey:boolean = true;
+  celdas_faltantes:string = '';
 
   constructor(private conexion:MainService,private router:Router) { }
 
   ngOnInit(): void {
     let data = this.conexion.obj_carga_to_parameter.data
     if (this.columnas.length == 0) { 
-      console.log('no hay data')
+      // console.log('no hay data')
       this.haydatos = false
     }else{
       this.columnas = data.columnas;
@@ -33,7 +35,7 @@ export class ParametrosComponent implements OnInit {
     }
     this.conexion.getDataParameter()
     .subscribe(data =>{
-      console.log(data)
+      // console.log(data)
       this.nombreArchivo = data.body.fileName
       if (this.columnas.length == 0){
         this.columnas = data.body.columnas;
@@ -59,12 +61,68 @@ export class ParametrosComponent implements OnInit {
   }
 
   revisarArray(arr:any){
-    console.log('revisarArray',arr)
     if(arr == undefined){
       return []
     }else{
       return arr
     }
+  }
+
+  subirParametros(form:any){
+    this.celdas_faltantes = ''
+    this.isOkey = true;
+
+    let parametros = {}
+    this.listaParametros.forEach((paramName,index,array)=>{
+      //@ts-ignore
+      parametros[paramName] = this.checkOpcionales(paramName,form.value[paramName])
+    })
+    this.listaParametros_num.forEach((paramName,index,array)=>{
+      //@ts-ignore
+      parametros[paramName] = this.checkOpcionales(paramName,form.value[paramName])
+    })
+    this.listaParametros_text.forEach((paramName,index,array)=>{
+      //@ts-ignore
+      parametros[paramName] = this.checkOpcionales(paramName,form.value[paramName])
+    })
+    // console.log('params',parametros)
+    let todoJson = {
+      'caso': this.casoActual.caso,
+      'name': this.casoActual.name,
+      'parametros': parametros
+    }
+    if (this.isOkey) {
+      //se puede subir
+      console.log('todo esta fino')
+      this.conexion.sendParameters(todoJson)
+      .subscribe(data =>{
+        console.log('data recived', data)
+        if (data.status == 200) {
+          this.router.navigate(['/reporte'])
+        }else{
+          //existe un error
+        }
+      },
+      err => console.log(err)
+      )
+    }
+  }
+
+  checkOpcionales(name:string,paramName:string){    
+    if(paramName == null || paramName == ""){
+      for (let ops of this.listaParametros_opc){
+        if (ops == name){
+          return ""
+        }
+      }
+      if (this.celdas_faltantes == '') {
+        this.celdas_faltantes += name
+      }else{
+        this.celdas_faltantes += ','+name
+      }
+      this.isOkey = false
+    }
+    return paramName
   }
 
 }

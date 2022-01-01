@@ -1,14 +1,59 @@
-<form>
-    <div class="form-group row">
-      <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
-      <div class="col-sm-10">
-        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com">
+<div *ngIf="(hayData); else elseBlock" class="container">
+    <br>
+    <div class="d-flex justify-content-center">
+        <h1><strong>Reporte de Analisis de Datos</strong></h1>
+      </div>
+    <div class="row">
+        <div class="col">
+              <br>
+              <br>
+            <div *ngFor="let l_ur of listaUrlsStatic">
+                <div class="container">
+                    <img src="{{baseUrl}}/{{l_ur}}" alt="{{l_ur}}" class="rounded mx-auto d-block" width="300" height="300">
+                </div>
+                <br>
+            </div>
+            <div *ngFor="let key of listaDataStatic">
+                <div class="container">
+                    <p> {{key}} </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div  class="descarga-pdf" id="pdfd" #pdfd>
+                <div class="d-flex justify-content-center">
+                    <h1>{{nombreReporte}}</h1>
+                  </div>
+                <div *ngFor="let l_ur of listaUrls">
+                    <div class="container">
+                        <img src="{{baseUrl}}/{{l_ur}}" alt="{{l_ur}}" class="rounded mx-auto d-block" width="300" height="300">
+                    </div>
+                    <br>
+                </div>
+                <div *ngFor="let key of listaDataCalc">
+                    <div class="container">
+                        <p> {{key}} </p>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <h4>{{conclusion}}</h4>
+                </div>
+            </div>
+            <div>
+            </div>    
+            <div class="button-file" style="padding: 2em 0; justify-content: center;
+                align-items: center; display: flex;">
+                <button (click)="createPDF()" class="btn btn-outline-danger boton-item" style="font-size:1.3em;">descargar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #elseBlock>
+    <div class="container">
+      <br>
+      <div class="d-flex justify-content-center alert alert-danger" role="alert">
+        <h1>No hay informacion para realizar un reporte, construyalo en 
+            <a href="/parametrizacion" style="color:#900C3F;"><strong>Ajuste de parametros</strong></a> </h1>
       </div>
     </div>
-    <div class="form-group row">
-      <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
-      <div class="col-sm-10">
-        <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-      </div>
-    </div>
-  </form>
+  </ng-template>
