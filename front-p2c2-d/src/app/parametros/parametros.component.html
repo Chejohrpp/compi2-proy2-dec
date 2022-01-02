@@ -21,6 +21,10 @@
     <div class="d-flex justify-content-center">
       <p>Nombre del archivo actual : <strong>{{nombreArchivo}}</strong></p>
     </div>
+    <div class="d-flex justify-content-center">
+      <button type="button" class="btn btn-outline-danger btn-sm" (click)="clearData()" >Eliminar la data ({{nombreArchivo}}) ingresada</button>
+    </div>
+    <br>
   </div>
   <div *ngIf="(casoActual != undefined && casoActual != null)">
     <form #parametros="ngForm" (ngSubmit)="subirParametros(parametros)">       
@@ -75,6 +79,11 @@
     <div *ngIf="(isOkey == false)">
       <div class="d-flex justify-content-center alert alert-danger" role="alert">
         <p>No se rellenaron las celdas: <strong>{{celdas_faltantes}}</strong></p>
+      </div>
+    </div>
+    <div *ngIf="(hayError != '')">
+      <div class="d-flex justify-content-center alert alert-danger" role="alert">
+        <p> {{hayError}} </p>
       </div>
     </div>
   </div>  

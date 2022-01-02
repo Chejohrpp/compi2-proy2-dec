@@ -40,5 +40,8 @@ export class MainService {
     return this.http.get(`${this.BASE_URL}/reporte`)
   }
 
+  limpiarData(): Observable<any>{
+    return this.http.get(`${this.BASE_URL}/clearall`)
+  }
   
 }

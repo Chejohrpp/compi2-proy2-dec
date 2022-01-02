@@ -1,5 +1,12 @@
 
 <div class="container">
+    <br>
+    <div class="d-flex justify-content-center">
+        <h1><strong>Carga de datos al servidor</strong></h1>
+    </div>
+    <div class="d-flex justify-content-center">
+        <p>Arhivos Aceptables: .csv , .xlsx , .xls , .json</p>
+    </div>
     <div class="content-father">
         <form #subirFile="ngForm" (ngSubmit)="subirArchivo(subirFile)">
             <div class="content">
@@ -18,5 +25,10 @@
     <br>
     <div class="d-flex justify-content-center">
         <p *ngIf="isLoad==2" class="alert alert-danger" role="alert">Ingrese nuevamente el archivo</p>
+    </div>
+    <div *ngIf="(hayError != '')">
+        <div class="d-flex justify-content-center alert alert-danger" role="alert">
+          <p> {{hayError}} </p>
+        </div>
     </div>
 </div>

@@ -21,6 +21,7 @@ export class ParametrosComponent implements OnInit {
   casoActual:any;
   isOkey:boolean = true;
   celdas_faltantes:string = '';
+  hayError:string = '';
 
   constructor(private conexion:MainService,private router:Router) { }
 
@@ -33,22 +34,32 @@ export class ParametrosComponent implements OnInit {
       this.columnas = data.columnas;
       this.haydatos = true
     }
+    this.hayError ='';
     this.conexion.getDataParameter()
     .subscribe(data =>{
       // console.log(data)
-      this.nombreArchivo = data.body.fileName
-      if (this.columnas.length == 0){
-        this.columnas = data.body.columnas;
-        if(this.columnas.length == 0){
-          this.haydatos = false;
-        }else{
-          this.haydatos = true;
-        }  
+      if(data.status == 200){
+        this.nombreArchivo = data.body.fileName
+        if (this.columnas.length == 0){
+          this.columnas = data.body.columnas;
+          if(this.columnas.length == 0){
+            this.haydatos = false;
+          }else{
+            this.haydatos = true;
+          }  
+        }
+        this.listaAnalisis =  data.body.listaAnalisis
+        this.listaNombres = data.body.listaNombres
+      }else{
+          let estado = data.status
+          let mensaje =  data.body.error
+          this.hayError = `Error ${estado} : ${mensaje}`
       }
-      this.listaAnalisis =  data.body.listaAnalisis
-      this.listaNombres = data.body.listaNombres
     },
-    err => console.log(err)
+    err => {
+      console.log(err)
+      this.hayError = `Error ${err.status} : ${err.message}`
+    }
     )
   }
 
@@ -71,6 +82,7 @@ export class ParametrosComponent implements OnInit {
   subirParametros(form:any){
     this.celdas_faltantes = ''
     this.isOkey = true;
+    this.hayError ='';
 
     let parametros = {}
     this.listaParametros.forEach((paramName,index,array)=>{
@@ -100,10 +112,15 @@ export class ParametrosComponent implements OnInit {
         if (data.status == 200) {
           this.router.navigate(['/reporte'])
         }else{
-          //existe un error
+          let estado = data.status
+          let mensaje =  data.body.error
+          this.hayError = `Error ${estado} : ${mensaje}`
         }
       },
-      err => console.log(err)
+      err => {
+        console.log(err)
+        this.hayError = `Error ${err.status} : ${err.message}`
+      }
       )
     }
   }
@@ -123,6 +140,22 @@ export class ParametrosComponent implements OnInit {
       this.isOkey = false
     }
     return paramName
+  }
+
+  clearData(){
+    this.hayError = ''
+    this.conexion.limpiarData()
+    .subscribe(data => {
+      let sucess = data.body.sucess
+      if (sucess) {
+        this.router.navigate(['/'])
+      }
+    },
+    err => {
+      console.log(err)
+      this.hayError = `Error ${err.status} : ${err.message}`
+    }
+    )
   }
 
 }

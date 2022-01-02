@@ -12,6 +12,7 @@ export class CargaFileComponent implements OnInit {
   file_entrada:any = null;
   nombre_archivo:string = 'Escoge un Archivo'
   isLoad:number = 0;
+  hayError:string = '';
 
   constructor(private conexion:MainService,private router:Router) { } 
 
@@ -29,6 +30,7 @@ export class CargaFileComponent implements OnInit {
       this.isLoad = 2
     }else{
       this.isLoad = 1
+      this.hayError = '';
       //hacer el proceso de enviar el dato
       this.conexion.sendFile(this.file_entrada)
       .subscribe(data =>{
@@ -38,10 +40,15 @@ export class CargaFileComponent implements OnInit {
           //redirect
           this.router.navigate(['/parametrizacion'])
         }else{
-          //ocurrio un error
+          let estado = data.status
+          let mensaje =  data.body.error
+          this.hayError = `Error ${estado} : ${mensaje}`
         }
       },
-      error => console.log(error)
+      err => {
+        console.log(err)
+        this.hayError = `Error ${err.status} : ${err.message}`
+      }
       )
     }
   }
