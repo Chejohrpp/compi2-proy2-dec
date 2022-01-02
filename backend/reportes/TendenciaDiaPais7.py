@@ -13,10 +13,25 @@ import matplotlib.pyplot as plt
 import fun_main as fm
 import fun_reportes as fr
 
-path_imgs = 'static/imgs_temp'
-name_report = 'Tendencia de la infección por Covid-19 en un Pais'
+# 'Tendencia del numero de infectados por dia de un Pais':{
+#             'caso':7,
+#             'name':'Tendencia del numero de infectados por dia de un Pais',
+#             'no_parametros': 4,
+#             'parametros':['tiempo','confirmados','celda_pais'],
+#             'opcionales': ['nombre_pais','celda_pais'],
+#             'parametros_texto':['nombre_pais']
+#         }
 
-def analizar(filepath,x_celda,y_celda,pais_celda=None,pais=None):
+# path_imgs = 'static/imgs_temp'
+name_report = 'Tendencia del numero de infectados por dia de un Pais'
+
+def analizar(filepath,param):
+    ### Asignacion de celdas  ###############################################
+    x_celda = param['tiempo']
+    y_celda = param['confirmados']
+    celda_pais = param['celda_pais']
+    nombre_pais = param['nombre_pais']
+    ### Lista de variables  ###############################################
     lista_urls_imgs = []
     lista_urls_static = []
     datos_calculados = []
@@ -32,9 +47,8 @@ def analizar(filepath,x_celda,y_celda,pais_celda=None,pais=None):
     ######### Limpiar los datos ##########################################
     limpia_x = fr.limpiarData(df,x_celda)
     limpia_y = fr.limpiarData(df,y_celda)
-    if pais != "" and pais_celda != "":
-        df = df[df[pais_celda].str.contains(pais)]
-        datos_calculados.append("Pais Utilizado : " + str(pais))
+    if celda_pais != "" and nombre_pais != "":
+        df = df[df[celda_pais].str.contains(nombre_pais)]
 
     df_xcelda = df[x_celda]
     if (limpia_x == False or df_xcelda.dtype == 'datetime64[ns]'):
@@ -98,10 +112,9 @@ def analizar(filepath,x_celda,y_celda,pais_celda=None,pais=None):
     datos_calculados.append(" datos entrenados:  " )
     for i in range(len(df[x_celda])):
         datos_calculados.append( str(df[x_celda].iloc[i]) + " : " + str(round(y_predictions[i],2)))
-
     #### Graph #######################################################################
     title = 'grado usado {}; RMSE = {}; R^2={:.3f}'.format(grado,round(rmse,2),r2)
-    plt.title("Tendencia de la infección por Covid-19 en un Pais\n"+title,fontsize=10)
+    plt.title(name_report+"\n"+title,fontsize=10)
     plt.xlabel(x_celda)
     plt.ylabel(y_celda)
     plt.plot(df[x_celda],y_predictions,color="red",linewidth=3)

@@ -13,10 +13,25 @@ import matplotlib.pyplot as plt
 import fun_main as fm
 import fun_reportes as fr
 
-path_imgs = 'static/imgs_temp'
-name_report = 'Tendencia de la infección por Covid-19 en un Pais'
+# 'Tendencia de la vacunacion de en un Pais':{
+#             'caso':9,
+#             'name':'Tendencia de la vacunacion de en un Pais',
+#             'no_parametros': 4,
+#             'parametros':['tiempo','vacunacion','celda_pais'],
+#             'opcionales': ['nombre_pais','celda_pais'],
+#             'parametros_texto':['nombre_pais']
+#         }
 
-def analizar(filepath,x_celda,y_celda,pais_celda=None,pais=None):
+# path_imgs = 'static/imgs_temp'
+name_report = 'Tendencia de la vacunacion de en un Pais'
+
+def analizar(filepath,param):
+    ### Asignacion de celdas  ###############################################
+    x_celda = param['tiempo']
+    y_celda = param['vacunacion']
+    celda_pais = param['celda_pais']
+    nombre_pais = param['nombre_pais']
+    ### Lista de variables  ###############################################
     lista_urls_imgs = []
     lista_urls_static = []
     datos_calculados = []
@@ -28,13 +43,12 @@ def analizar(filepath,x_celda,y_celda,pais_celda=None,pais=None):
     if(df.empty):
         print ('Error, no hay un dataframe')
         return False
-
     ######### Limpiar los datos ##########################################
     limpia_x = fr.limpiarData(df,x_celda)
     limpia_y = fr.limpiarData(df,y_celda)
-    if pais != "" and pais_celda != "":
-        df = df[df[pais_celda].str.contains(pais)]
-        datos_calculados.append("Pais Utilizado : " + str(pais))
+    if celda_pais != "" and nombre_pais != "":
+        df = df[df[celda_pais].str.contains(nombre_pais)]
+        datos_calculados.append("Pais Utilizado : " + str(nombre_pais))
 
     df_xcelda = df[x_celda]
     if (limpia_x == False or df_xcelda.dtype == 'datetime64[ns]'):
@@ -47,8 +61,7 @@ def analizar(filepath,x_celda,y_celda,pais_celda=None,pais=None):
     ##### Asginamos Variables ##########################################
     x = np.asarray(df_xcelda).reshape(-1,1)
     y = df_ycelda
-
-    # ##datos extras##
+    ##### datos extras ##########################################
     plt.scatter(df[x_celda],df[y_celda],color="blue")
     path_aux = fr.generarUrlImg("fig_muestra.png",lista_urls_static)
     plt.xlabel(x_celda)
@@ -58,19 +71,15 @@ def analizar(filepath,x_celda,y_celda,pais_celda=None,pais=None):
     plt.autoscale()
     plt.savefig(path_aux,bbox_inches = "tight")
     plt.clf()
-
     #### build ###############################################################
     grado = 3
     poly_feature = PolynomialFeatures(grado)
     x_transform = poly_feature.fit_transform(x)
-
     #### Train ###############################################################
     #algorithm
     l_reg = linear_model.LinearRegression()
-
     model = l_reg.fit(x_transform,y)
     y_predictions = model.predict(x_transform)
-
     #### Calculate ###########################################################
     rmse = np.sqrt(mean_squared_error(y,y_predictions))
     # print("rmse:",rmse)
@@ -98,10 +107,9 @@ def analizar(filepath,x_celda,y_celda,pais_celda=None,pais=None):
     datos_calculados.append(" datos entrenados:  " )
     for i in range(len(df[x_celda])):
         datos_calculados.append( str(df[x_celda].iloc[i]) + " : " + str(round(y_predictions[i],2)))
-
     #### Graph #######################################################################
     title = 'grado usado {}; RMSE = {}; R^2={:.3f}'.format(grado,round(rmse,2),r2)
-    plt.title("Tendencia de la infección por Covid-19 en un Pais\n"+title,fontsize=10)
+    plt.title(name_report+"\n"+title,fontsize=10)
     plt.xlabel(x_celda)
     plt.ylabel(y_celda)
     plt.plot(df[x_celda],y_predictions,color="red",linewidth=3)

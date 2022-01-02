@@ -9,7 +9,7 @@ import fun_main as fm
 import Analisis as an
 
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-print ('root paht',ROOT_PATH)
+# print ('root paht',ROOT_PATH)
 
 os.environ.update({'ROOT_PATH': ROOT_PATH})
 os.environ.update({'ENV': "desarrollo"})
@@ -20,14 +20,18 @@ app = Flask(__name__)
 CORS(app)
 
 app.config["file_analizar"] = 'static/files_analizar'
-app.config["path_file"] = ''
-app.config["file_name"] = ''
+app.config["path_file"] = 'static/files_analizar/file.xlsx' ##Esto tiene que quedar nulo
+app.config["file_name"] = 'file.xlsx'  ##Esto tiene que quedar nulo
 app.config["datos_reporte"] = {}
+
+@app.route("/",methods=['GET'])
+def inicio():
+    return jsonify(configReturn('Bienvenidos al api'))
 
 @app.route("/api",methods=['GET'])
 def hello_world():
     # return jsonify({"hello":"hello world","atributo":224})
-    print(app.config["path_file"])
+    # print(app.config["path_file"])
     return jsonify(configReturn(''))
 
 
@@ -60,7 +64,7 @@ def enviar_parametros():
 @app.route('/api/parametros',methods=['POST'])
 def realizarAnalisis():
     if app.config["path_file"] != '':
-        print(request.json)
+        # print(request.json)
         # print(request.json['caso'])
         # print(request.json["name"])
         # print(request.json["parametros"])
@@ -100,6 +104,6 @@ def configReturnStatus(status,body):
     }
     return retorno
 
-
+### Esto deberia ser cambiado ###
 app.config['DEBUG'] = os.environ.get('ENV') == 'desarrollo'
 app.run(host='localhost',port=int(os.environ.get('PUERTO')))
