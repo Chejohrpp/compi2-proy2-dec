@@ -49,6 +49,7 @@ def analizar(filepath,param):
     limpia_y = fr.limpiarData(df,y_celda)
     if celda_pais != "" and nombre_pais != "":
         df = df[df[celda_pais].str.contains(nombre_pais)]
+        datos_calculados.append("Pais Utilizado : " + str(nombre_pais))
 
     df_xcelda = df[x_celda]
     if (limpia_x == False or df_xcelda.dtype == 'datetime64[ns]'):
@@ -86,6 +87,7 @@ def analizar(filepath,param):
     y_predictions = model.predict(x_transform)
 
     #### Calculate ###########################################################
+    datos_calculados.append("grado usado : " + str(grado))
     rmse = np.sqrt(mean_squared_error(y,y_predictions))
     # print("rmse:",rmse)
     datos_calculados.append("rmse : " + str(round(rmse,2)))

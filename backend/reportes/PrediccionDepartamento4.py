@@ -75,7 +75,7 @@ def analizar(filepath,param):
     plt.savefig(path_aux,bbox_inches = "tight")
     plt.clf()
     #### build ###############################################################
-    grado = 12
+    grado = 10
     poly_feature = PolynomialFeatures(grado)
     x_transform = poly_feature.fit_transform(x)
     #### Train ###############################################################
@@ -86,6 +86,7 @@ def analizar(filepath,param):
     y_predictions = model.predict(x_transform)
 
     #### Calculate ###########################################################
+    datos_calculados.append("grado usado : " + str(grado))
     rmse = np.sqrt(mean_squared_error(y,y_predictions))
     # print("rmse:",rmse)
     datos_calculados.append("rmse : " + str(round(rmse,2)))

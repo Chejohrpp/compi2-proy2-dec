@@ -122,6 +122,28 @@ def getlistadoAnalysis():
             'parametros':['tiempo','celda_pais','celda_vacunacion'],
             'parametros_texto':['nombre_pais_1','nombre_pais_2']
         },
+        'Muertes segun regiones de un pais':{
+            'caso':14,
+            'name':'Muertes segun regiones de un pais',
+            'no_parametros': 6,
+            'parametros':['tiempo','fallecidos','celda_pais','celda_region'],
+            'parametros_texto':['nombre_pais','nombre_region']
+        },
+        'Tendencia de casos confirmados de COVID en un departamento de un Pais':{
+            'caso':15,
+            'name':'Tendencia de casos confirmados de COVID en un departamento de un Pais',
+            'no_parametros': 6,
+            'parametros':['tiempo','confirmados','celda_pais','celda_departamento'],
+            'parametros_texto':['nombre_pais','nombre_departamento']
+        },
+        'Tasa de mortalidad por (COVID-19) en un pais':{
+            'caso':22,
+            'name':'Tasa de mortalidad por (COVID-19) en un pais',
+            'no_parametros': 5,
+            'parametros':['tiempo','fallecido','celda_pais'],
+            'opcionales': ['nombre_pais','celda_pais'],
+            'parametros_texto':['nombre_pais']
+        },
         'Comparacion entre el numero de casos detectados y el numero de pruebas de un pais':{
             'caso':24,
             'name':'Comparacion entre el numero de casos detectados y el numero de pruebas de un pais',
@@ -146,5 +168,7 @@ def listaAnalisisNombres():
                 'Prediccion de mortalidad por COVID en un Pais','Analisis del numero de muertes por coronavirus en un Pais',
                 'Tendencia del numero de infectados por dia de un Pais','Prediccion de casos de un pais para un año',
                 'Tendencia de la vacunacion de en un Pais','Analisis Comparativo de Vacunacion entre 2 paises',
+                'Muertes segun regiones de un pais','Tendencia de casos confirmados de COVID en un departamento de un Pais',
+                'Tasa de mortalidad por (COVID-19) en un pais',
                 'Comparacion entre el numero de casos detectados y el numero de pruebas de un pais','Prediccion de casos confirmados por dia']
     return lista

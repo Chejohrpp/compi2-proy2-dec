@@ -81,6 +81,7 @@ def analizar(filepath,param):
     model = l_reg.fit(x_transform,y)
     y_predictions = model.predict(x_transform)
     #### Calculate ###########################################################
+    datos_calculados.append("grado usado : " + str(grado))
     rmse = np.sqrt(mean_squared_error(y,y_predictions))
     # print("rmse:",rmse)
     datos_calculados.append("rmse : " + str(round(rmse,2)))

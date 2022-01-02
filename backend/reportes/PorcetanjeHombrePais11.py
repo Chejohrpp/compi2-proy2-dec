@@ -14,25 +14,25 @@ import matplotlib.pyplot as plt
 import fun_main as fm
 import fun_reportes as fr
 
-# 'Analisis del numero de muertes por coronavirus en un Pais':{
-#             'caso':6,
-#             'name':'Analisis del numero de muertes por coronavirus en un Pais',
+# 'Porcentaje de hombres infectados por COVID en un Pais desde el primer caso activo':{
+#             'caso':11,
+#             'name':'Porcentaje de hombres infectados por COVID en un Pais desde el primer caso activo',
 #             'no_parametros': 5,
-#             'parametros':['tiempo','fallecido','confirmados','celda_pais'],
-#             'parametros_texto':['nombre_pais']
-#             'opcionales': ['nombre_pais','celda_pais']
+#             'parametros':['celda_activo','celda_genero','celda_pais'],
+#             'opcionales': ['nombre_pais','celda_pais'],
+#             'parametros_texto':['nombre_pais','identificador_genero']
 #         }
 
 # path_imgs = 'static/imgs_temp'
-name = 'Analisis del numero de muertes por coronavirus en un Pais'
+name = 'Porcentaje de hombres infectados por COVID en un Pais desde el primer caso activo'
 
 def analizar(filepath,param):
     ### Asignacion de celdas  ###############################################
-    x_celda = param['tiempo']
-    y_celda = param['fallecido']
-    y_celda2 = param['confirmados']
+    x_celda = param['celda_activo']
+    y_celda = param['celda_genero']
     celda_pais = param['celda_pais']
     nombre_pais = param['nombre_pais']
+    tiempo_predecir = param['identificador_genero']
     ### Lista de variables  ###############################################
     lista_urls_imgs = []
     lista_urls_static = []
@@ -40,7 +40,6 @@ def analizar(filepath,param):
     datos_estaticos = []
     l_encod_x = LabelEncoder()
     l_encod_y = LabelEncoder()
-    l_encod_y2 = LabelEncoder()
     ### GET DataFrame  ###############################################
     df = fm.getDataFrame(filepath)
     if(df.empty):
@@ -49,7 +48,6 @@ def analizar(filepath,param):
     ######### Limpiar los datos ##########################################
     limpia_x =fr.limpiarData(df,x_celda)
     limpia_y = fr.limpiarData(df,y_celda)
-    limpia_y2 = fr.limpiarData(df,y_celda2)
     if nombre_pais != "" and celda_pais != "":
         df = df[df[celda_pais].str.contains(nombre_pais)]
         datos_calculados.append("Pais Utilizado : " + str(nombre_pais))
@@ -62,56 +60,51 @@ def analizar(filepath,param):
     if (limpia_y == False or df_ycelda.dtype == 'datetime64[ns]'):
         df_ycelda = l_encod_y.fit_transform(df[y_celda])
 
-    df_ycelda2 = df[y_celda2]
-    if (limpia_y2 == False or df_ycelda2.dtype == 'datetime64[ns]'):
-        df_ycelda2 = l_encod_y2.fit_transform(df[y_celda2])
-
     ##### Asginamos Variables ##########################################
     x = np.asarray(df_xcelda).reshape(-1,1)
     y = df_ycelda
-    y2 = df_ycelda2
-    ##### Graph datos extras ##########################################
-    plt.scatter(df[x_celda],df[y_celda],color="red")
-    plt.scatter(df[x_celda],df[y_celda2],color="blue")
+    ##### datos extras ##########################################
+    plt.scatter(df[x_celda],df[y_celda],color="blue")
+
     path_aux = fr.generarUrlImg("fig_muestra.png",lista_urls_static)
     plt.xlabel(x_celda)
     plt.ylabel(y_celda)
-    plt.title("Datos ingresados\nrojo=fallecidos\nazul=confirmados",fontsize=10)
+    plt.title("Datos ingresados",fontsize=10)
     plt.xticks(rotation=45)
     plt.autoscale()
     plt.savefig(path_aux,bbox_inches = "tight")
     plt.clf()
     #### build ###############################################################
-    grado = 8
+    grado = 12
     poly_feature = PolynomialFeatures(grado)
     x_transform = poly_feature.fit_transform(x)
     #### Train ###############################################################
     #algorithm
-    l_reg = linear_model.LinearRegression()
-    model = l_reg.fit(x_transform,y)
-    y_predictions = model.predict(x_transform)
+    # l_reg = linear_model.LinearRegression()
+
+    # model = l_reg.fit(x_transform,y)
+    # y_predictions = model.predict(x_transform)
+
     #### Calculate ###########################################################
-    datos_calculados.append("grado usado : " + str(grado))
-    datos_calculados.append(" datos de construccion grafica de fallecidos:  " )
-    datos_estaticos.append(" datos de construccion grafica de fallecidos:  " )
-    rmse = np.sqrt(mean_squared_error(y,y_predictions))
-    # print("rmse:",rmse)
-    datos_calculados.append("rmse : " + str(round(rmse,2)))
-    datos_estaticos.append("rmse : " + str(rmse))
-    r2 = r2_score(y,y_predictions)
-    # print ("r^2:",r2)
-    datos_calculados.append("r^2 : " + str(round(r2,2)))
-    datos_estaticos.append("r^2 : " + str(r2))
-    #coef_
-    coef = model.coef_
-    datos_calculados.append("coef : " + str(coef[0]))
-    for i in range(1,len(coef)):
-        datos_calculados.append("coef "+ str(i) +" : " + str(coef[i]))
-    datos_estaticos.append("coef : " + str(coef))
-    #intercep
-    intercept = model.intercept_
-    datos_calculados.append("intercept : " + str(intercept))
-    datos_estaticos.append("intercept : " + str(intercept))
+    # datos_calculados.append("grado usado : " + str(grado))
+    # rmse = np.sqrt(mean_squared_error(y,y_predictions))
+    # # print("rmse:",rmse)
+    # datos_calculados.append("rmse : " + str(round(rmse,2)))
+    # datos_estaticos.append("rmse : " + str(rmse))
+    # r2 = r2_score(y,y_predictions)
+    # # print ("r^2:",r2)
+    # datos_calculados.append("r^2 : " + str(round(r2,2)))
+    # datos_estaticos.append("r^2 : " + str(r2))
+    # #coef_
+    # coef = model.coef_
+    # datos_calculados.append("coef : " + str(coef[0]))
+    # for i in range(1,len(coef)):
+    #     datos_calculados.append("coef "+ str(i) +" : " + str(coef[i]))
+    # datos_estaticos.append("coef : " + str(coef))
+    # #intercep
+    # intercept = model.intercept_
+    # datos_calculados.append("intercept : " + str(intercept))
+    # datos_estaticos.append("intercept : " + str(intercept))
 
     #### Graph #######################################################################
     # title = 'grado usado {}; RMSE = {}; R^2={:.3f}'.format(grado,round(rmse,2),r2)
@@ -146,18 +139,14 @@ def analizar(filepath,param):
 
     #### Graph #######################################################################
     # title = 'grado usado {}; RMSE = {}; R^2={:.3f}'.format(grado,round(rmse,2),r2)
-    title2 = 'Azul=confirmados\nrojo=fallecidos'
-    plt.title(name+"\n"+title2,fontsize=10)
-    plt.xlabel(x_celda)
-    plt.ylabel(y_celda)
-    plt.plot(df[x_celda],y2,color="blue",linewidth=3)
-    plt.plot(df[x_celda],y_predictions,color="red",linewidth=3)
-    plt.xticks(rotation=45)
-    path_aux = fr.generarUrlImg("fig_prediccion.png",lista_urls_imgs)
-    plt.autoscale()
-    plt.savefig(path_aux,bbox_inches = "tight")
-    plt.clf()
+    # plt.title(name+"\n"+title,fontsize=10)
+    # plt.xlabel(x_celda)
+    # plt.ylabel(y_celda)
+    # plt.plot(x_new,y_new_predicted,color="red",linewidth=3)
+    # path_aux = fr.generarUrlImg("fig_prediccion.png",lista_urls_imgs)
+    # plt.savefig(path_aux)
+    # plt.clf()
     #### enviar los datos #######################################################################
-    return fr.addData(datos_calculados,lista_urls_imgs,lista_urls_static,datos_estaticos,'En la grafica se muestra la relacion de las muertes con la cantidad de confirmados que existe en el mismo tiempo',name)
+    return fr.addData(datos_calculados,lista_urls_imgs,lista_urls_static,datos_estaticos,'',name)
 
 

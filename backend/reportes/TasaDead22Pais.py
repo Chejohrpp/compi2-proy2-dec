@@ -14,24 +14,24 @@ import matplotlib.pyplot as plt
 import fun_main as fm
 import fun_reportes as fr
 
-#              'caso':2,
-#             'name':'Predicción de infectados en un Pais',
+# 'Tasa de mortalidad por (COVID-19) en un pais':{
+#             'caso':22,
+#             'name':'Tasa de mortalidad por (COVID-19) en un pais',
 #             'no_parametros': 5,
-#             'parametros':['tiempo','confirmados','celda_pais'],
-#             'opcionales': ['celda_pais','nombre_pais'],
-#             'parametros_numericos':['tiempo_predecir'],
+#             'parametros':['tiempo','fallecido','celda_pais'],
+#             'opcionales': ['nombre_pais','celda_pais'],
 #             'parametros_texto':['nombre_pais']
+#         }
 
-path_imgs = 'static/imgs_temp'
-name = 'Predicción de infectados en un Pais'
+# path_imgs = 'static/imgs_temp'
+name = 'Tasa de mortalidad por (COVID-19) en un pais'
 
 def analizar(filepath,param):
     ### Asignacion de celdas  ###############################################
     x_celda = param['tiempo']
-    y_celda = param['confirmados']
+    y_celda = param['fallecido']
     celda_pais = param['celda_pais']
     nombre_pais = param['nombre_pais']
-    tiempo_predecir = param['tiempo_predecir']
     ### Lista de variables  ###############################################
     lista_urls_imgs = []
     lista_urls_static = []
@@ -73,7 +73,7 @@ def analizar(filepath,param):
     plt.savefig(path_aux,bbox_inches = "tight")
     plt.clf()
     #### build ###############################################################
-    grado = 3
+    grado = 5
     poly_feature = PolynomialFeatures(grado)
     x_transform = poly_feature.fit_transform(x)
     #### Train ###############################################################
@@ -84,7 +84,6 @@ def analizar(filepath,param):
     y_predictions = model.predict(x_transform)
 
     #### Calculate ###########################################################
-    datos_calculados.append("grado usado : " + str(grado))
     rmse = np.sqrt(mean_squared_error(y,y_predictions))
     # print("rmse:",rmse)
     datos_calculados.append("rmse : " + str(round(rmse,2)))
@@ -111,40 +110,23 @@ def analizar(filepath,param):
     plt.ylabel(y_celda)
     plt.plot(df[x_celda],y_predictions,color="red",linewidth=3)
     plt.xticks(rotation=45)
-    path_aux = fr.generarUrlImg("fig_tendencia.png",lista_urls_static)
+    path_aux = fr.generarUrlImg("fig_tendencia.png",lista_urls_imgs)
     plt.autoscale()
     plt.savefig(path_aux,bbox_inches = "tight")
     plt.clf()
 
     #### Prediccion ##########################################################
-    min_d = df_xcelda.min()
-    max_d = tiempo_predecir + len(y) + min_d ##Esto tiene que ser variable
-    # x_new = np.linspace(min_d,max_d)
-    x_new = np.arange(min_d,max_d).reshape(-1,1)
-    # x_new = np.array(x_new).reshape(-1,1)
-    x_new_transform = poly_feature.fit_transform(x_new)
-    y_new_predicted = model.predict(x_new_transform)
-
-    # print("Para el dia {0} contagios seran".format(max_d),y_new_predicted[-1]) ##Imprime la ultima prediccion
-    datos_calculados.append("Cantidad extra a predecir : " + str(tiempo_predecir))
-    if (df[x_celda].dtype == 'datetime64[ns]'):
-        fecha = df_xcelda.max()
-        tiempo_prediccion =  l_encod_x.inverse_transform([fecha])[0] + pd.Timedelta( str(tiempo_predecir) + ' days')
-        datos_calculados.append("Tiempo de prediccion : " + str(tiempo_prediccion))
-    else:
-        datos_calculados.append("Tiempo de prediccion : " + str(max_d-1))    
-    datos_calculados.append("Resultado de Prediccion : " + str(round(y_new_predicted[-1],2)))
 
     #### Graph #######################################################################
-    title = 'grado usado {}; RMSE = {}; R^2={:.3f}'.format(grado,round(rmse,2),r2)
-    plt.title(name+"\n"+title,fontsize=10)
-    plt.xlabel(x_celda)
-    plt.ylabel(y_celda)
-    plt.plot(x_new,y_new_predicted,color="red",linewidth=3)
-    path_aux = fr.generarUrlImg("fig_prediccion.png",lista_urls_imgs)
-    plt.savefig(path_aux)
-    plt.clf()
+    # title = 'grado usado {}; RMSE = {}; R^2={:.3f}'.format(grado,round(rmse,2),r2)
+    # plt.title(name+"\n"+title,fontsize=10)
+    # plt.xlabel(x_celda)
+    # plt.ylabel(y_celda)
+    # plt.plot(x_new,y_new_predicted,color="red",linewidth=3)
+    # path_aux = fr.generarUrlImg("fig_prediccion.png",lista_urls_imgs)
+    # plt.savefig(path_aux)
+    # plt.clf()
     #### enviar los datos #######################################################################
-    return fr.addData(datos_calculados,lista_urls_imgs,lista_urls_static,datos_estaticos,fr.makeConclusionPredic(round(y_new_predicted[-1],2)),name)
+    return fr.addData(datos_calculados,lista_urls_imgs,lista_urls_static,datos_estaticos,'La grafica muestra como se mira la tasa de mortalidad con el COVID',name)
 
 

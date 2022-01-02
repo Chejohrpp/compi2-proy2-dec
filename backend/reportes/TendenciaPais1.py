@@ -72,6 +72,7 @@ def analizar(filepath,x_celda,y_celda,pais_celda=None,pais=None):
     y_predictions = model.predict(x_transform)
 
     #### Calculate ###########################################################
+    datos_calculados.append("grado usado : " + str(grado))
     rmse = np.sqrt(mean_squared_error(y,y_predictions))
     # print("rmse:",rmse)
     datos_calculados.append("rmse : " + str(round(rmse,2)))
