@@ -10,8 +10,8 @@ export class MainService {
   obj_carga_to_parameter:any = {};
 
   // private BASE_URL = 'http://localhost:4000';
-  private BASE_URL = '/api';
-  BASE_URL_PUBLIC = 'http://localhost:4000'
+  private BASE_URL = 'http://apic2p2dec-env.eba-gpkjep2y.us-east-2.elasticbeanstalk.com/api';
+  BASE_URL_PUBLIC = 'http://apic2p2dec-env.eba-gpkjep2y.us-east-2.elasticbeanstalk.com'
 
   constructor(private http: HttpClient) { 
     
