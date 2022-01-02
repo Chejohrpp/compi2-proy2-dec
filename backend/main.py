@@ -12,16 +12,17 @@ ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 # print ('root paht',ROOT_PATH)
 
 os.environ.update({'ROOT_PATH': ROOT_PATH})
-os.environ.update({'ENV': "desarrollo"})
-os.environ.update({'PUERTO': '4000'})
+os.environ.update({'ENV': "desarrollo"}) ### Esto deberia ser cambiado ###
+os.environ.update({'PUERTO': '4000'}) ### Esto deberia ser cambiado ###
 sys.path.append(os.path.join(ROOT_PATH,'reportes'))
 
-app = Flask(__name__)
+application = Flask(__name__)
+app = application
 CORS(app)
 
 app.config["file_analizar"] = 'static/files_analizar'
-app.config["path_file"] = 'static/files_analizar/file.xlsx' ##Esto tiene que quedar nulo
-app.config["file_name"] = 'file.xlsx'  ##Esto tiene que quedar nulo
+app.config["path_file"] = '' ##Esto tiene que quedar nulo
+app.config["file_name"] = ''  ##Esto tiene que quedar nulo
 app.config["datos_reporte"] = {}
 
 @app.route("/",methods=['GET'])
