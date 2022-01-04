@@ -212,17 +212,20 @@ De manera simplificada, hay una api escrita en **Python** que realiza todos los 
 ## Carga de archivos
 
 ![](resource/tec02.png)
+
 Es es el diagrama de eventos de como se comunica el fronted con la api al realizar la carga de datos
 
 
 ## Parametrizacion
 
 ![](resource/tec03.png)
+
 Este es el diagrama de eventos de como se comunican cuando se esta parametrizando, desde que se carga hasta que envia los parametros
 
 ## Reporte
 
 ![](resource/tec04.png)
+
 Este es el diagrama de eventos de como es su comunicacion cuando se consume los reportes.
 
 
@@ -252,9 +255,7 @@ Este es la foma en que se organiza la informacion para que sea recibida por el f
 
 Para angular lo unico que hay que hacer primero es instalar los paquetes:
 ``` bash
-
     npm intall
-
 ```
 
 dirigirse a 
@@ -281,9 +282,7 @@ Cambiar a:
 Luego de se ejecutado seguira el comando:
 
 ``` bash
-
     npm start
-     
 ```
 Se utilizara este y no el **ng serve** puesto que tiene una configuracion proxy para que no haya conflicto con el problema muy conocido para estos casos que es el **CORS**
 
