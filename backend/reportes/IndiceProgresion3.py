@@ -41,6 +41,8 @@ def analizar(filepath,param):
         print ('Error, no hay un dataframe')
         return False
     ######### Limpiar los datos ##########################################
+    df = fr.limpiarColumna(df,x_celda)
+    df = fr.limpiarColumna(df,y_celda)
     limpia_x =fr.limpiarData(df,x_celda)
     limpia_y = fr.limpiarData(df,y_celda)
     # if nombre_pais != "" and celda_pais != "":
@@ -135,8 +137,10 @@ def analizar(filepath,param):
     plt.xlabel(x_celda)
     plt.ylabel(y_celda)
     plt.plot(df[x_celda],y_predictions,color="red",linewidth=3)
+    plt.xticks(rotation=45)
     path_aux = fr.generarUrlImg("fig_prediccion.png",lista_urls_imgs)
-    plt.savefig(path_aux)
+    plt.autoscale()
+    plt.savefig(path_aux,bbox_inches = "tight")
     plt.clf()
     #### enviar los datos #######################################################################
     return fr.addData(datos_calculados,lista_urls_imgs,lista_urls_static,datos_estaticos,'',name)
